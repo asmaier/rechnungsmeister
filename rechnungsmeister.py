@@ -4,7 +4,7 @@
 import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
-
+import subprocess
 # see http://eosrei.net/articles/2015/11/latex-templates-python-and-jinja2-generate-pdfs
 import os
 import jinja2
@@ -29,39 +29,49 @@ class App:
     def __init__(self, master):
 
         frame = Frame(master)
-        Label(frame, text="Invoice").pack()
-        self.invoice_date = self.make_entry(frame, "date", default="04.11.2017")
-        self.invoice_number = self.make_entry(frame, "number", default="TT/1333")
-        Label(frame, text="Customer").pack()
-        self.customer_title = self.make_entry(frame, "title", default="geehrter Herr")
-        self.customer_first_name = self.make_entry(frame, "first name", default="Franz")
-        self.customer_last_name = self.make_entry(frame, "last name", default="Kafka")
-        self.customer_street = self.make_entry(frame, "street", default="No-Name-Straße 2a")
-        self.customer_city = self.make_entry(frame, "city", default="12345 Prag")
-        Label(frame, text="Item").pack()
-        self.item_long = self.make_entry(frame, "item_long", default="die schriftliche Übersetzung mit der Auftragsnummer 89898")
-        self.item = self.make_entry(frame, "item", default="Übersetzung, 70 Cent pro Zeile")
-        self.quantity = self.make_entry(frame, "quantity", default="100")
-        self.price = self.make_entry(frame, "price", default="0,70")
+        frame.pack()
 
-        self.button = Button(frame, text="QUIT", fg="red", command=frame.quit)
-        self.button.pack(side=LEFT)
+        Label(frame, text="Invoice", font="-weight bold").grid(row=0, columnspan=2)
+        self.invoice_date = self.make_entry2(frame, 1, "Date:", default="04.11.2017")
+        self.invoice_number = self.make_entry2(frame, 2, "Number:", default="TT/1333")
 
-        self.hi_there = Button(frame, text="Generate Invoice", command=self.generate_invoice)
-        self.hi_there.pack(side=RIGHT)
+        Label(frame, text="Customer", font="-weight bold").grid(row=3, columnspan=2)
+        self.customer_title = self.make_entry2(frame, 4, "Title:", default="geehrter Herr")
+        self.customer_first_name = self.make_entry2(frame, 5, "First name:", default="Franz")
+        self.customer_last_name = self.make_entry2(frame, 6, "Last name", default="Kafka")
+        self.customer_street = self.make_entry2(frame, 7, "Street:", default="No-Name-Straße 2a")
+        self.customer_city = self.make_entry2(frame, 8, "City:", default="12345 Prag")
 
-        frame.pack(fill=BOTH, expand=YES)
+        Label(frame, text="Item", font="-weight bold").grid(row=9, columnspan=2)
+        self.item_long = self.make_entry2(frame, 10, "Item (long):", default="die schriftliche Übersetzung mit der Auftragsnummer 89898")
+        self.item = self.make_entry2(frame, 11, "Item:", default="Übersetzung, 70 Cent pro Zeile")
+        self.quantity = self.make_entry2(frame, 12, "Quantity:", default="100")
+        self.price = self.make_entry2(frame, 13, "Price:", default="0,70")
+
+        self.quit = Button(frame, text="QUIT", font="-weight bold", command=frame.quit)
+        self.quit.grid(row=14, column=0)
+        self.generate = Button(frame, text="Generate Invoice", font="-weight bold", command=self.generate_invoice)
+        self.generate.grid(row=14, column=1, sticky=E)
 
     def make_entry(self, parent, caption, width=None, default=None, **options):
         fm = Frame(parent)
-        Label(fm, text=caption).pack(side=LEFT)
+        Label(fm, text=caption, width=10).pack(side=LEFT)
         entry = Entry(fm, **options)
         if width:
             entry.config(width=width)
         if default:
             entry.insert(0, default)
         entry.pack(side=LEFT)
-        fm.pack()
+        fm.pack(side=TOP, anchor=W, fill=X, expand=YES)
+        return entry
+
+    def make_entry2(self, parent, row, label, default=None):
+        Label(parent, text=label).grid(row=row, column=0, sticky=W)
+        entry = Entry(parent)
+        if default:
+            entry.insert(0, default)
+        entry.config(width=64)
+        entry.grid(row=row, column=1)
         return entry
 
     def generate_invoice(self):
@@ -88,6 +98,8 @@ class App:
             # before writing it to a file
             out_file.write(output)
             print "Created file invoice.tex."
+        proc = subprocess.Popen(["pdflatex", "invoice.tex"])
+        proc.communicate()
 
 root = Tk()
 
