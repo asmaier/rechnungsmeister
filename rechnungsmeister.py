@@ -45,8 +45,8 @@ class App:
         self.customer_city = self.make_entry2(frame, 8, "City:", default="12345 Prag")
 
         Label(frame, text="Item", font="-weight bold").grid(row=9, columnspan=2)
-        self.item_long = self.make_entry2(frame, 10, "Item (long):", default="die schriftliche Übersetzung mit der Auftragsnummer 12345")
-        self.item = self.make_entry2(frame, 11, "Item:", default="Übersetzung, 70 Cent pro Zeile")
+        self.item_long = self.make_entry2(frame, 10, "Item (long):", default="das Urteil mit der Auftragsnummer 12345")
+        self.item = self.make_entry2(frame, 11, "Item:", default="Urteil, 70 Cent pro Zeile")
         self.quantity = self.make_entry2(frame, 12, "Quantity:", default="100")
         self.price = self.make_entry2(frame, 13, "Price:", default="0,70")
 
