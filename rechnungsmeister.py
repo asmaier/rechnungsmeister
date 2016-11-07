@@ -24,6 +24,8 @@ latex_jinja_env = jinja2.Environment(
 
 from Tkinter import *
 
+from ConfigParser import SafeConfigParser
+
 class App:
 
     def __init__(self, master):
@@ -43,7 +45,7 @@ class App:
         self.customer_city = self.make_entry2(frame, 8, "City:", default="12345 Prag")
 
         Label(frame, text="Item", font="-weight bold").grid(row=9, columnspan=2)
-        self.item_long = self.make_entry2(frame, 10, "Item (long):", default="die schriftliche Übersetzung mit der Auftragsnummer 89898")
+        self.item_long = self.make_entry2(frame, 10, "Item (long):", default="die schriftliche Übersetzung mit der Auftragsnummer 12345")
         self.item = self.make_entry2(frame, 11, "Item:", default="Übersetzung, 70 Cent pro Zeile")
         self.quantity = self.make_entry2(frame, 12, "Quantity:", default="100")
         self.price = self.make_entry2(frame, 13, "Price:", default="0,70")
@@ -52,6 +54,9 @@ class App:
         self.quit.grid(row=14, column=0)
         self.generate = Button(frame, text="Generate Invoice", font="-weight bold", command=self.generate_invoice)
         self.generate.grid(row=14, column=1, sticky=E)
+
+        self.parser = SafeConfigParser()
+        self.parser.read("invoice.ini")
 
     def make_entry(self, parent, caption, width=None, default=None, **options):
         fm = Frame(parent)
@@ -78,6 +83,18 @@ class App:
         template = latex_jinja_env.get_template('invoice_template.tex')
 
         variables = {
+            "biller_name_long" : self.parser.get("biller","name_long"),
+            "biller_name" : self.parser.get("biller","name"),
+            "biller_street" : self.parser.get("biller","street"),
+            "biller_city" : self.parser.get("biller","city"),
+            "biller_phone" : self.parser.get("biller","phone"),
+            "biller_email" : self.parser.get("biller","email"),
+            "biller_vat" : self.parser.get("biller","vat_number"),
+            "bank_name" : self.parser.get("bank","name"),
+            "bank_code" : self.parser.get("bank","code"),
+            "bank_account" : self.parser.get("bank","account"),
+            "bank_iban" : self.parser.get("bank","iban"),
+            "bank_bic" : self.parser.get("bank","bic"),
             "invoice_number" : self.invoice_number.get(),
             "invoice_date" : self.invoice_date.get(),
             "customer_title" : self.customer_title.get(),

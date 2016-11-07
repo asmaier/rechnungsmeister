@@ -1,0 +1,55 @@
+\documentclass[DIN,fromalign=center,paper=a4,fontsize=11pt]{scrlttr2}
+%\LoadLetterOption{rechnung}
+\usepackage{rechnung}
+\usepackage{textcomp} %Eurosymbol
+\usepackage[german]{babel}
+\usepackage[utf8]{inputenc}
+
+\setkomavar{fromphone}{\VAR{biller_phone}}
+\setkomavar{fromname}{\VAR{biller_name_long}}
+\setkomavar{fromaddress}{\VAR{biller_street} \VAR{biller_city}\\Tel.: \VAR{biller_phone}\\E-Mail: \VAR{biller_email}}
+
+\setkomavar{subject}{Rechnung Nr. \VAR{invoice_number}}
+\setkomavar{yourref}[Auftrag vom]{\VAR{invoice_date}}
+
+\setkomavar{frombank}{Konto Nr.: \VAR{bank_account}\\BLZ: \VAR{bank_code}\\}
+
+\setkomavar{firstfoot}{%
+\parbox[t]{\textwidth}{\footnotesize
+\begin{tabular}[t]{l@{}}%
+\multicolumn{1}{@{}l@{}}{}\\\VAR{biller_name}\\\VAR{biller_street} \VAR{biller_city}\\USt-IdNr.: \VAR{biller_vat}\\
+\end{tabular}%
+\ifkomavarempty{frombank}{}{%
+\hfill
+\begin{tabular}[t]{l@{}}%
+\multicolumn{1}{@{}l@{}}{}\\\usekomavar*{frombank}\\
+\usekomavar{frombank}
+\end{tabular}%
+\hfill
+\begin{tabular}[t]{l@{}}%
+\multicolumn{1}{@{}l@{}}{}\\Bank: \VAR{bank_name}\\IBAN: \VAR{bank_iban}\\BIC/SWIFT: \VAR{bank_bic}\\
+\end{tabular}%
+}}}
+
+\begin{document}
+\begin{letter}{\VAR{customer_first_name} \VAR{customer_last_name}\\
+\VAR{customer_street}\\
+\VAR{customer_city}}
+\opening{Sehr \VAR{customer_title} \VAR{customer_last_name},}
+für \VAR{item_long} stelle ich wie folgt in Rechnung:
+\Waehrung{EUR}
+\begin{Rechnung}[N]
+%\Versandkosten{5,95}
+\Steuersatz{0}{0}
+\PositionEin
+\TrennerAus
+\Artikel{\VAR{quantity}}{\VAR{item}}{\VAR{price}}
+
+
+\end{Rechnung}
+\textit{Es erfolgt kein Ausweis der Umsatzsteuer aufgrund der Anwendung der Kleinunternehmerregelung gemäß § 19 UStG.}\\\\
+%Für Umsatzsteuer nicht steuerbarer Umsatz, da Leistung als im Ausland erbracht gilt.
+Bitte überweisen Sie den Rechnungsbeitrag auf das unten angegebene Konto.
+\closing{Mit freundlichen Grüßen}
+\end{letter}
+\end{document}
