@@ -50,7 +50,7 @@ class App:
         self.quantity = self.make_entry2(frame, 12, "Menge:", default="100")
         self.price = self.make_entry2(frame, 13, "Preis:", default="0,70")
 
-        self.quit = Button(frame, text="Abbrechen", font="-weight bold", command=frame.quit)
+        self.quit = Button(frame, text="Schliessen", font="-weight bold", command=frame.quit)
         self.quit.grid(row=14, column=0)
         self.generate = Button(frame, text="Erstelle Rechnung", font="-weight bold", command=self.generate_invoice)
         self.generate.grid(row=14, column=1, sticky=E)
