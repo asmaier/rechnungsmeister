@@ -33,30 +33,30 @@ class App:
         frame = Frame(master)
         frame.pack()
 
-        Label(frame, text="Invoice", font="-weight bold").grid(row=0, columnspan=2)
-        self.invoice_date = self.make_entry2(frame, 1, "Date:", default="04.11.2017")
-        self.invoice_number = self.make_entry2(frame, 2, "Number:", default="TT/1333")
+        Label(frame, text="Rechnung", font="-weight bold").grid(row=0, columnspan=2)
+        self.invoice_date = self.make_entry2(frame, 1, "Datum:", default="04.11.2017")
+        self.invoice_number = self.make_entry2(frame, 2, "Nummer:", default="TT/1333")
 
-        Label(frame, text="Customer", font="-weight bold").grid(row=3, columnspan=2)
-        self.customer_title = self.make_entry2(frame, 4, "Title:", default="geehrter Herr")
-        self.customer_first_name = self.make_entry2(frame, 5, "First name:", default="Franz")
-        self.customer_last_name = self.make_entry2(frame, 6, "Last name", default="Kafka")
-        self.customer_street = self.make_entry2(frame, 7, "Street:", default="No-Name-Straße 2a")
-        self.customer_city = self.make_entry2(frame, 8, "City:", default="12345 Prag")
+        Label(frame, text="Kunde", font="-weight bold").grid(row=3, columnspan=2)
+        self.customer_title = self.make_entry2(frame, 4, "Titel:", default="geehrter Herr")
+        self.customer_first_name = self.make_entry2(frame, 5, "Vorname:", default="Franz")
+        self.customer_last_name = self.make_entry2(frame, 6, "Nachname", default="Kafka")
+        self.customer_street = self.make_entry2(frame, 7, "Strasse:", default="No-Name-Straße 2a")
+        self.customer_city = self.make_entry2(frame, 8, "Stadt:", default="12345 Prag")
 
-        Label(frame, text="Item", font="-weight bold").grid(row=9, columnspan=2)
-        self.item_long = self.make_entry2(frame, 10, "Item (long):", default="das Urteil mit der Auftragsnummer 12345")
-        self.item = self.make_entry2(frame, 11, "Item:", default="Urteil, 70 Cent pro Zeile")
-        self.quantity = self.make_entry2(frame, 12, "Quantity:", default="100")
-        self.price = self.make_entry2(frame, 13, "Price:", default="0,70")
+        Label(frame, text="Artikel", font="-weight bold").grid(row=9, columnspan=2)
+        self.item_long = self.make_entry2(frame, 10, "Artikel (lang):", default="das Urteil mit der Auftragsnummer 12345")
+        self.item = self.make_entry2(frame, 11, "Artikel:", default="Urteil, 70 Cent pro Zeile")
+        self.quantity = self.make_entry2(frame, 12, "Menge:", default="100")
+        self.price = self.make_entry2(frame, 13, "Preis:", default="0,70")
 
-        self.quit = Button(frame, text="QUIT", font="-weight bold", command=frame.quit)
+        self.quit = Button(frame, text="Abbrechen", font="-weight bold", command=frame.quit)
         self.quit.grid(row=14, column=0)
-        self.generate = Button(frame, text="Generate Invoice", font="-weight bold", command=self.generate_invoice)
+        self.generate = Button(frame, text="Erstelle Rechnung", font="-weight bold", command=self.generate_invoice)
         self.generate.grid(row=14, column=1, sticky=E)
 
         self.parser = SafeConfigParser()
-        self.parser.read("invoice.ini")
+        self.parser.read("rechnung.ini")
 
     def make_entry(self, parent, caption, width=None, default=None, **options):
         fm = Frame(parent)
@@ -80,7 +80,7 @@ class App:
         return entry
 
     def generate_invoice(self):
-        template = latex_jinja_env.get_template('invoice_template.tex')
+        template = latex_jinja_env.get_template('rechnung_template.tex')
 
         variables = {
             "biller_name_long" : self.parser.get("biller","name_long"),
@@ -108,14 +108,14 @@ class App:
             "price" : self.price.get()
         }
 
-        with open("invoice.tex", "w") as out_file:
+        with open("rechnung.tex", "w") as out_file:
             output = template.render(variables)
 
             # jinja returns unicode - so `output` needs to be encoded to a bytestring
             # before writing it to a file
             out_file.write(output)
-            print "Created file invoice.tex."
-        proc = subprocess.Popen(["pdflatex", "invoice.tex"])
+            print "Created file rechnung.tex."
+        proc = subprocess.Popen(["pdflatex", "rechnung.tex"])
         proc.communicate()
 
 root = Tk()
