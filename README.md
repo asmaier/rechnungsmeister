@@ -53,4 +53,8 @@ a file `rechnung.pdf` using `pdflatex` in the background. Open the file with
 some pdfviewer. If it is ok, you can stop the Rechnungsmeister by clicking 
 on `Schliessen`.
 
+## Customization
+The tool comes with a default LaTeX template `rechnung_template.tex`. To change 
+the generated PDF simply edit this LaTeX template.
+
     
