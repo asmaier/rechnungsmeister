@@ -36,14 +36,18 @@
 \VAR{customer_street}\\
 \VAR{customer_city}}
 \opening{Sehr \VAR{customer_title} \VAR{customer_last_name},}
-für \VAR{item_long} stelle ich wie folgt in Rechnung:
+für \VAR{summary} stelle ich wie folgt in Rechnung:
 \Waehrung{EUR}
 \begin{Rechnung}[N]
 %\Versandkosten{5,95}
 \Steuersatz{0}{0}
 \PositionEin
 \TrennerAus
-\Artikel{\VAR{quantity}}{\VAR{item}}{\VAR{price}}
+
+\BLOCK{ for article in articles }
+\Artikel{\VAR{article.1}}{\VAR{article.0}}{\VAR{article.2}}
+\BLOCK{ endfor }
+
 
 
 \end{Rechnung}
